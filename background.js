@@ -1,66 +1,87 @@
-// background.js — CDP typing with explicit code/key/text and proper modifiers
 const MOD = { Alt:1, Ctrl:2, Meta:4, Shift:8 };
 
+const SHIFT_LEFT = Object.freeze({
+  keyDown: { type: 'keyDown', key: 'Shift', code: 'ShiftLeft', windowsVirtualKeyCode: 16, nativeVirtualKeyCode: 16, modifiers: MOD.Shift },
+  keyUp:   { type: 'keyUp',   key: 'Shift', code: 'ShiftLeft', windowsVirtualKeyCode: 16, nativeVirtualKeyCode: 16, modifiers: 0 }
+});
+
 const PUNCT = {
-  "'": { code: 'Quote',        key: "'", text: "'", shift: false },
-  '"': { code: 'Quote',        key: '"', text: '"', shift: true  },
-  '[': { code: 'BracketLeft',  key: '[', text: '[', shift: false },
-  '{': { code: 'BracketLeft',  key: '{', text: '{', shift: true  },
-  ']': { code: 'BracketRight', key: ']', text: ']', shift: false },
-  '}': { code: 'BracketRight', key: '}', text: '}', shift: true  },
-  '\\':{ code: 'Backslash',    key: '\\',text: '\\',shift: false },
-  '|': { code: 'Backslash',    key: '|', text: '|', shift: true  },
-  ';': { code: 'Semicolon',    key: ';', text: ';', shift: false },
-  ':': { code: 'Semicolon',    key: ':', text: ':', shift: true  },
-  ',': { code: 'Comma',        key: ',', text: ',', shift: false },
-  '<': { code: 'Comma',        key: '<', text: '<', shift: true  },
-  '.': { code: 'Period',       key: '.', text: '.', shift: false },
-  '>': { code: 'Period',       key: '>', text: '>', shift: true  },
-  '/': { code: 'Slash',        key: '/', text: '/', shift: false },
-  '?': { code: 'Slash',        key: '?', text: '?', shift: true  },
-  '`': { code: 'Backquote',    key: '`', text: '`', shift: false },
-  '~': { code: 'Backquote',    key: '~', text: '~', shift: true  },
-  '-': { code: 'Minus',        key: '-', text: '-', shift: false },
-  '_': { code: 'Minus',        key: '_', text: '_', shift: true  },
-  '=': { code: 'Equal',        key: '=', text: '=', shift: false },
-  '+': { code: 'Equal',        key: '+', text: '+', shift: true  },
-  ' ': { code: 'Space',        key: ' ', text: ' ', shift: false },
-  '!': { code: 'Digit1',       key: '!', text: '!', shift: true  },
-  '@': { code: 'Digit2',       key: '@', text: '@', shift: true  },
-  '#': { code: 'Digit3',       key: '#', text: '#', shift: true  },
-  '$': { code: 'Digit4',       key: '$', text: '$', shift: true  },
-  '%': { code: 'Digit5',       key: '%', text: '%', shift: true  },
-  '^': { code: 'Digit6',       key: '^', text: '^', shift: true  },
-  '&': { code: 'Digit7',       key: '&', text: '&', shift: true  },
-  '*': { code: 'Digit8',       key: '*', text: '*', shift: true  },
-  '(': { code: 'Digit9',       key: '(', text: '(', shift: true  },
-  ')': { code: 'Digit0',       key: ')', text: ')', shift: true  }
+  "'": { code: 'Quote',        text: "'", shift: false, vk: 222, baseKey:"'" },
+  '"': { code: 'Quote',        text: '"', shift: true,  vk: 222, baseKey:"'" },
+  '[': { code: 'BracketLeft',  text: '[', shift: false, vk: 219, baseKey:"[" },
+  '{': { code: 'BracketLeft',  text: '{', shift: true,  vk: 219, baseKey:"[" },
+  ']': { code: 'BracketRight', text: ']', shift: false, vk: 221, baseKey:"]" },
+  '}': { code: 'BracketRight', text: '}', shift: true,  vk: 221, baseKey:"]" },
+  '\\':{ code: 'Backslash',    text: '\\',shift: false, vk: 220, baseKey:"\\" },
+  '|': { code: 'Backslash',    text: '|', shift: true,  vk: 220, baseKey:"\\" },
+  ';': { code: 'Semicolon',    text: ';', shift: false, vk: 186, baseKey:";" },
+  ':': { code: 'Semicolon',    text: ':', shift: true,  vk: 186, baseKey:";" },
+  ',': { code: 'Comma',        text: ',', shift: false, vk: 188, baseKey:"," },
+  '<': { code: 'Comma',        text: '<', shift: true,  vk: 188, baseKey:"," },
+  '.': { code: 'Period',       text: '.', shift: false, vk: 190, baseKey:"." },
+  '>': { code: 'Period',       text: '>', shift: true,  vk: 190, baseKey:"." },
+  '/': { code: 'Slash',        text: '/', shift: false, vk: 191, baseKey:"/" },
+  '?': { code: 'Slash',        text: '?', shift: true,  vk: 191, baseKey:"/" },
+  '`': { code: 'Backquote',    text: '`', shift: false, vk: 192, baseKey:"`" },
+  '~': { code: 'Backquote',    text: '~', shift: true,  vk: 192, baseKey:"`" },
+  '-': { code: 'Minus',        text: '-', shift: false, vk: 189, baseKey:"-" },
+  '_': { code: 'Minus',        text: '_', shift: true,  vk: 189, baseKey:"-" },
+  '=': { code: 'Equal',        text: '=', shift: false, vk: 187, baseKey:"=" },
+  '+': { code: 'Equal',        text: '+', shift: true,  vk: 187, baseKey:"=" },
+  ' ': { code: 'Space',        text: ' ', shift: false, vk: 32,  baseKey:" " },
+  '!': { code: 'Digit1',       text: '!', shift: true,  vk: 49,  baseKey:"1" },
+  '@': { code: 'Digit2',       text: '@', shift: true,  vk: 50,  baseKey:"2" },
+  '#': { code: 'Digit3',       text: '#', shift: true,  vk: 51,  baseKey:"3" },
+  '$': { code: 'Digit4',       text: '$', shift: true,  vk: 52,  baseKey:"4" },
+  '%': { code: 'Digit5',       text: '%', shift: true,  vk: 53,  baseKey:"5" },
+  '^': { code: 'Digit6',       text: '^', shift: true,  vk: 54,  baseKey:"6" },
+  '&': { code: 'Digit7',       text: '&', shift: true,  vk: 55,  baseKey:"7" },
+  '*': { code: 'Digit8',       text: '*', shift: true,  vk: 56,  baseKey:"8" },
+  '(': { code: 'Digit9',       text: '(', shift: true,  vk: 57,  baseKey:"9" },
+  ')': { code: 'Digit0',       text: ')', shift: true,  vk: 48,  baseKey:"0" }
 };
 
 function charMeta(ch){
-  if (ch === '\n' || ch === '\r') return { code: 'Enter', key: 'Enter', text: '', printable:false, shift:false };
+  if (ch === '\n' || ch === '\r') return { code: 'Enter', printable:false, shift:false, vk:13, baseKey:'Enter' };
   if (/^[A-Za-z]$/.test(ch)){
     const upper = ch === ch.toUpperCase();
     const base = ch.toUpperCase();
-    return { code: 'Key'+base, key: ch, text: ch, shift: upper, printable:true };
+    const lo = ch.toLowerCase();
+    return { code: 'Key'+base, baseKey: lo, text: ch, shift: upper, printable:true, vk: base.charCodeAt(0) };
   }
   if (/^[0-9]$/.test(ch)){
-    return { code: 'Digit'+ch, key: ch, text: ch, shift:false, printable:true };
+    return { code: 'Digit'+ch, baseKey: ch, text: ch, shift:false, printable:true, vk: 48 + Number(ch) };
   }
   if (PUNCT[ch]) return { ...PUNCT[ch], printable:true };
-  return { code: '', key: ch, text: ch, shift:false, printable:true };
+  return { code: '', baseKey: ch, text: ch, shift:false, printable:true };
 }
 
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
 async function sendKey(tabId, meta){
   const mods = meta.shift ? MOD.Shift : 0;
-  const down = { type:'keyDown', key: meta.key, code: meta.code || undefined };
-  const up   = { type:'keyUp',   key: meta.key, code: meta.code || undefined };
-  if (meta.printable) down.text = meta.text;
+  const needShift = !!meta.shift;
+  const baseKey = meta.baseKey ?? '';
+  const down = { type: 'keyDown', key: baseKey, code: meta.code || undefined };
+  const up   = { type:'keyUp',   key: baseKey, code: meta.code || undefined };
+  if (meta.vk) {
+    down.windowsVirtualKeyCode = meta.vk;
+    down.nativeVirtualKeyCode = meta.vk;
+    up.windowsVirtualKeyCode = meta.vk;
+    up.nativeVirtualKeyCode = meta.vk;
+  }
   if (mods) { down.modifiers = mods; up.modifiers = mods; }
+
+  if (needShift) await chrome.debugger.sendCommand({ tabId }, 'Input.dispatchKeyEvent', SHIFT_LEFT.keyDown);
   await chrome.debugger.sendCommand({ tabId }, 'Input.dispatchKeyEvent', down);
+
+  if (meta.printable && meta.text) {
+    const ch = { type:'char', text: meta.text };
+    await chrome.debugger.sendCommand({ tabId }, 'Input.dispatchKeyEvent', ch);
+  }
+
   await chrome.debugger.sendCommand({ tabId }, 'Input.dispatchKeyEvent', up);
+  if (needShift) await chrome.debugger.sendCommand({ tabId }, 'Input.dispatchKeyEvent', SHIFT_LEFT.keyUp);
 }
 
 async function sendAltShiftCombo(tabId){
