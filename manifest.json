@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "RU→EN Layout Typer (CDP v2, explicit codes)",
+  "name": "RU→EN Layout Typer (CDP)",
+  "short_name": "RU→EN Typer",
   "version": "2.1.0",
-  "description": "Набор через Chrome DevTools Protocol. Явные code/key/text для пунктуации. Shift/Alt модификаторы учитываются.",
+  "description": "Эмулирует набор в активной вкладке через Chrome DevTools Protocol: RU→EN по физическим клавишам (JCUKEN→QWERTY) с автопереключением Alt+Shift.",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Layout Typer (CDP v2)"
+    "default_title": "RU→EN Layout Typer (CDP)"
   },
   "permissions": [
     "activeTab",
