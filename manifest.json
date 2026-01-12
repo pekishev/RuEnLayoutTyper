@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "RU→EN Layout Typer (CDP v2, explicit codes)",
+  "version": "2.1.0",
+  "description": "Набор через Chrome DevTools Protocol. Явные code/key/text для пунктуации. Shift/Alt модификаторы учитываются.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Layout Typer (CDP v2)"
+  },
+  "permissions": [
+    "activeTab",
+    "debugger"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}
