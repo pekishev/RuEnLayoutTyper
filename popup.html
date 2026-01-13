@@ -12,6 +12,7 @@
     .row.settings { align-items: center; }
     label { font-size: 12px; color: #444; }
     input[type="number"] { width: 88px; padding: 6px 8px; border-radius: 6px; border: 1px solid #ddd; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -23,9 +24,10 @@
   </div>
   <div class="row">
     <button id="type" class="primary">Напечатать</button>
-    <button id="altshift">Alt+Shift</button>
-    <button id="stop">Стоп</button>
+    <button id="resume" class="hidden">Продолжить</button>
+    <button id="stop" class="hidden">Стоп</button>
     <button id="clear">Очистить</button>
+    <button id="altshift">Alt+Shift</button>
   </div>
   <script type="module" src="popup.js"></script>
 </body>

@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "RU→EN Layout Typer (CDP)",
+  "name": "RU→EN Typer",
   "short_name": "RU→EN Typer",
   "version": "2.1.0",
   "description": "Эмулирует набор в активной вкладке через Chrome DevTools Protocol: RU→EN по физическим клавишам (JCUKEN→QWERTY) с автопереключением Alt+Shift.",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "RU→EN Layout Typer (CDP)"
+    "default_title": "RU→EN Typer"
   },
   "permissions": [
     "activeTab",
