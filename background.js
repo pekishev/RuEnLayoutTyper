@@ -6,39 +6,39 @@ const SHIFT_LEFT = Object.freeze({
 });
 
 const PUNCT = {
-  "'": { code: 'Quote',        text: "'", shift: false, baseKey:"'" },
-  '"': { code: 'Quote',        text: '"', shift: true,  baseKey:"'" },
-  '[': { code: 'BracketLeft',  text: '[', shift: false, baseKey:"[" },
-  '{': { code: 'BracketLeft',  text: '{', shift: true,  baseKey:"[" },
-  ']': { code: 'BracketRight', text: ']', shift: false, baseKey:"]" },
-  '}': { code: 'BracketRight', text: '}', shift: true,  baseKey:"]" },
-  '\\':{ code: 'Backslash',    text: '\\',shift: false, baseKey:"\\" },
-  '|': { code: 'Backslash',    text: '|', shift: true,  baseKey:"\\" },
-  ';': { code: 'Semicolon',    text: ';', shift: false, baseKey:";" },
-  ':': { code: 'Semicolon',    text: ':', shift: true,  baseKey:";" },
-  ',': { code: 'Comma',        text: ',', shift: false, baseKey:"," },
-  '<': { code: 'Comma',        text: '<', shift: true,  baseKey:"," },
-  '.': { code: 'Period',       text: '.', shift: false, baseKey:"." },
-  '>': { code: 'Period',       text: '>', shift: true,  baseKey:"." },
-  '/': { code: 'Slash',        text: '/', shift: false, baseKey:"/" },
-  '?': { code: 'Slash',        text: '?', shift: true,  baseKey:"/" },
-  '`': { code: 'Backquote',    text: '`', shift: false, baseKey:"`" },
-  '~': { code: 'Backquote',    text: '~', shift: true,  baseKey:"`" },
-  '-': { code: 'Minus',        text: '-', shift: false, baseKey:"-" },
-  '_': { code: 'Minus',        text: '_', shift: true,  baseKey:"-" },
-  '=': { code: 'Equal',        text: '=', shift: false, baseKey:"=" },
-  '+': { code: 'Equal',        text: '+', shift: true,  baseKey:"=" },
-  ' ': { code: 'Space',        text: ' ', shift: false, baseKey:" " },
-  '!': { code: 'Digit1',       text: '!', shift: true,  baseKey:"1" },
-  '@': { code: 'Digit2',       text: '@', shift: true,  baseKey:"2" },
-  '#': { code: 'Digit3',       text: '#', shift: true,  baseKey:"3" },
-  '$': { code: 'Digit4',       text: '$', shift: true,  baseKey:"4" },
-  '%': { code: 'Digit5',       text: '%', shift: true,  baseKey:"5" },
-  '^': { code: 'Digit6',       text: '^', shift: true,  baseKey:"6" },
-  '&': { code: 'Digit7',       text: '&', shift: true,  baseKey:"7" },
-  '*': { code: 'Digit8',       text: '*', shift: true,  baseKey:"8" },
-  '(': { code: 'Digit9',       text: '(', shift: true,  baseKey:"9" },
-  ')': { code: 'Digit0',       text: ')', shift: true,  baseKey:"0" }
+  "'": { code: 'Quote',        shift: false, baseKey:"'" },
+  '"': { code: 'Quote',        shift: true,  baseKey:"'" },
+  '[': { code: 'BracketLeft',  shift: false, baseKey:"[" },
+  '{': { code: 'BracketLeft',  shift: true,  baseKey:"[" },
+  ']': { code: 'BracketRight', shift: false, baseKey:"]" },
+  '}': { code: 'BracketRight', shift: true,  baseKey:"]" },
+  '\\':{ code: 'Backslash',    shift: false, baseKey:"\\" },
+  '|': { code: 'Backslash',    shift: true,  baseKey:"\\" },
+  ';': { code: 'Semicolon',    shift: false, baseKey:";" },
+  ':': { code: 'Semicolon',    shift: true,  baseKey:";" },
+  ',': { code: 'Comma',        shift: false, baseKey:"," },
+  '<': { code: 'Comma',        shift: true,  baseKey:"," },
+  '.': { code: 'Period',       shift: false, baseKey:"." },
+  '>': { code: 'Period',       shift: true,  baseKey:"." },
+  '/': { code: 'Slash',        shift: false, baseKey:"/" },
+  '?': { code: 'Slash',        shift: true,  baseKey:"/" },
+  '`': { code: 'Backquote',    shift: false, baseKey:"`" },
+  '~': { code: 'Backquote',    shift: true,  baseKey:"`" },
+  '-': { code: 'Minus',        shift: false, baseKey:"-" },
+  '_': { code: 'Minus',        shift: true,  baseKey:"-" },
+  '=': { code: 'Equal',        shift: false, baseKey:"=" },
+  '+': { code: 'Equal',        shift: true,  baseKey:"=" },
+  ' ': { code: 'Space',        shift: false, baseKey:" " },
+  '!': { code: 'Digit1',       shift: true,  baseKey:"1" },
+  '@': { code: 'Digit2',       shift: true,  baseKey:"2" },
+  '#': { code: 'Digit3',       shift: true,  baseKey:"3" },
+  '$': { code: 'Digit4',       shift: true,  baseKey:"4" },
+  '%': { code: 'Digit5',       shift: true,  baseKey:"5" },
+  '^': { code: 'Digit6',       shift: true,  baseKey:"6" },
+  '&': { code: 'Digit7',       shift: true,  baseKey:"7" },
+  '*': { code: 'Digit8',       shift: true,  baseKey:"8" },
+  '(': { code: 'Digit9',       shift: true,  baseKey:"9" },
+  ')': { code: 'Digit0',       shift: true,  baseKey:"0" }
 };
 
 function charMeta(ch){
@@ -52,7 +52,7 @@ function charMeta(ch){
   if (/^[0-9]$/.test(ch)){
     return { code: 'Digit'+ch, baseKey: ch, text: ch, shift:false, printable:true };
   }
-  if (PUNCT[ch]) return { ...PUNCT[ch], printable:true };
+  if (PUNCT[ch]) return { ...PUNCT[ch], text: ch, printable:true };
   return { code: '', baseKey: ch, text: ch, shift:false, printable:true };
 }
 
@@ -86,21 +86,27 @@ async function sendAltShiftCombo(tabId){
 }
 
 chrome.runtime.onMessage.addListener(async (msg, _sender, sendResponse) => {
-  if (msg?.type !== 'CDP_TYPE_TEXT') return;
-  const { text, cps, altShiftPositions } = msg;
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab?.id) return sendResponse({ ok:false, error:'No active tab' });
     await chrome.debugger.attach({ tabId: tab.id }, '1.3');
 
-    const delay = Math.max(0, Math.round(1000 / (cps ?? 40)));
-    const toggles = new Set(Array.isArray(altShiftPositions) ? altShiftPositions : []);
+    if (msg?.type === 'CDP_ALT_SHIFT') {
+      await sendAltShiftCombo(tab.id);
+    } else if (msg?.type === 'CDP_TYPE_TEXT') {
+      const { text, cps, altShiftPositions } = msg;
+      const delay = Math.max(0, Math.round(1000 / (cps ?? 40)));
+      const toggles = new Set(Array.isArray(altShiftPositions) ? altShiftPositions : []);
 
-    for (let i=0;i<text.length;i++){
-      if (toggles.has(i)) await sendAltShiftCombo(tab.id);
-      const meta = charMeta(text[i]);
-      await sendKey(tab.id, meta);
-      if (delay) await sleep(delay);
+      for (let i=0;i<text.length;i++){
+        if (toggles.has(i)) await sendAltShiftCombo(tab.id);
+        const meta = charMeta(text[i]);
+        await sendKey(tab.id, meta);
+        if (delay) await sleep(delay);
+      }
+    } else {
+      await chrome.debugger.detach({ tabId: tab.id });
+      return;
     }
 
     await chrome.debugger.detach({ tabId: tab.id });
