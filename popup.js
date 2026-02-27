@@ -7,6 +7,8 @@ const $resume = document.getElementById("resume");
 const $altShift = document.getElementById("altshift");
 const $type = document.getElementById("type");
 const $clear = document.getElementById("clear");
+const $stats = document.getElementById("stats");
+const $version = document.getElementById("version");
 
 const CPS_KEY = "cps";
 let pollTimer = null;
@@ -34,6 +36,30 @@ function readCps() {
   return clamp(Math.round(raw), 1, 200);
 }
 
+function formatDuration(ms) {
+  if (!Number.isFinite(ms) || ms < 0) return "—";
+  const sec = Math.ceil(ms / 1000);
+  if (sec < 60) return `~${sec} с`;
+  const min = Math.floor(sec / 60);
+  const s = sec % 60;
+  return s ? `~${min} мин ${s} с` : `~${min} мин`;
+}
+
+function updateStatsFromText() {
+  if (!$stats) return;
+  const raw = $src?.value ?? "";
+  if (!raw) {
+    $stats.textContent = "";
+    return;
+  }
+  const lines = raw.split("\n").length;
+  const chars = raw.length;
+  const cps = readCps();
+  const sec = cps > 0 ? Math.ceil(chars / cps) : 0;
+  const timeStr = formatDuration(sec * 1000);
+  $stats.textContent = `${lines} стр., ${chars} сим., ${timeStr}`;
+}
+
 // restore saved cps
 try {
   const saved = Number(localStorage.getItem(CPS_KEY));
@@ -45,7 +71,11 @@ $cps?.addEventListener("change", () => {
   const v = readCps();
   $cps.value = String(v);
   try { localStorage.setItem(CPS_KEY, String(v)); } catch {}
+  updateStatsFromText();
 });
+
+$src?.addEventListener("input", updateStatsFromText);
+$src?.addEventListener("paste", () => setTimeout(updateStatsFromText, 0));
 
 function setUiState(state) {
   // idle: stop/resume hidden
@@ -72,6 +102,7 @@ async function refreshStatus() {
   // If status call failed, don't "snap" UI back to idle.
   if (state !== "idle" && state !== "running" && state !== "paused") return null;
   setUiState(state);
+  updateStatsFromText();
   return state;
 }
 
@@ -86,11 +117,17 @@ function stopPolling() {
   pollTimer = null;
 }
 
+try {
+  const manifest = chrome.runtime.getManifest();
+  if ($version && manifest?.version) $version.textContent = `v${manifest.version}`;
+} catch {}
+
 // initial sync
 refreshStatus().then((state) => {
   if (state === "idle") stopPolling();
   else startPolling();
 });
+updateStatsFromText();
 
 document.getElementById("type").addEventListener("click", async () => {
   const raw = $src.value ?? "";

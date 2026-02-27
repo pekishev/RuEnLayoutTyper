@@ -2,19 +2,14 @@
   "manifest_version": 3,
   "name": "RU→EN Typer",
   "short_name": "RU→EN Typer",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Эмулирует набор в активной вкладке через Chrome DevTools Protocol: RU→EN по физическим клавишам (JCUKEN→QWERTY) с автопереключением Alt+Shift.",
   "action": {
     "default_popup": "popup.html",
     "default_title": "RU→EN Typer"
   },
-  "permissions": [
-    "activeTab",
-    "debugger"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["activeTab", "debugger"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js",
     "type": "module"

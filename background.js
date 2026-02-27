@@ -108,7 +108,12 @@ chrome.runtime.onMessage.addListener(async (msg, _sender, sendResponse) => {
     if (msg?.type === 'CDP_STATUS') {
       const job = JOBS.get(tab.id);
       if (!job) return sendResponse({ ok:true, state:'idle' });
-      return sendResponse({ ok:true, state: job.state, i: job.i, len: job.text?.length ?? 0 });
+      return sendResponse({
+        ok: true,
+        state: job.state,
+        i: job.i,
+        len: job.text?.length ?? 0
+      });
     }
 
     if (msg?.type === 'CDP_STOP') {
@@ -147,7 +152,6 @@ chrome.runtime.onMessage.addListener(async (msg, _sender, sendResponse) => {
       await sendAltShiftCombo(tab.id);
     } else if (msg?.type === 'CDP_TYPE_TEXT') {
       const { text, cps, altShiftPositions } = msg;
-      // overwrite any previous (paused) job for this tab
       const job = {
         state: 'running',
         cancelRequested: false,
@@ -158,9 +162,18 @@ chrome.runtime.onMessage.addListener(async (msg, _sender, sendResponse) => {
         delay: Math.max(0, Math.round(1000 / (cps ?? 40)))
       };
       JOBS.set(tab.id, job);
-      await runTyping(tab.id, job);
-      job.attached = false;
-      if (job.i >= job.text.length) JOBS.delete(tab.id);
+      sendResponse({ ok: true });
+      runTyping(tab.id, job)
+        .then(() => {
+          job.attached = false;
+          if (job.i >= job.text.length) JOBS.delete(tab.id);
+          chrome.debugger.detach({ tabId: tab.id }).catch(() => {});
+        })
+        .catch(() => {
+          job.attached = false;
+          chrome.debugger.detach({ tabId: tab.id }).catch(() => {});
+        });
+      return true;
     } else {
       await chrome.debugger.detach({ tabId: tab.id });
       sendResponse({ ok:false, error:'Unknown message type' });
