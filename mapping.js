@@ -5,12 +5,19 @@ const RU2EN = new Map(Object.entries({
   ,"№":"#"
 }));
 
+// Заглавные кириллические буквы на знаках препинания → Shift-вариант US QWERTY (б→, Б→<).
+const PUNCT_SHIFT = Object.freeze({
+  "`": "~", "[": "{", "]": "}", ";": ":", "'": '"', ",": "<", ".": ">", "/": "?"
+});
+
 function ruToEn(ch) {
   if (RU2EN.has(ch)) return RU2EN.get(ch);
   const lo = ch.toLowerCase();
   if (RU2EN.has(lo)) {
     const mapped = RU2EN.get(lo);
-    return /[a-z]/.test(mapped) ? mapped.toUpperCase() : (ch === "Ё" ? "~" : mapped);
+    if (/[a-z]/.test(mapped)) return mapped.toUpperCase();
+    if (ch !== lo && PUNCT_SHIFT[mapped]) return PUNCT_SHIFT[mapped];
+    return mapped;
   }
   return ch;
 }
